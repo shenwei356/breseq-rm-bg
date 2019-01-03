@@ -2,7 +2,10 @@
 
 This tools is used for finding mutations using [breseq](https://github.com/barricklab/breseq) for experiments with a control sample.
 
-It makes breseq output file (`index.html`) more readable by removing mutations that are in control sample.
+If you use breseq to find mutation in bacteria, but the reference strain is not well assembled or annotated,
+you should re-seq your reference strain as a control, and use a close strain as reference for analysis.
+
+`breseq-rm-ctrl` makes breseq output file (`index.html`) more readable by removing mutations that are in control sample.
 
 ## Download
 
