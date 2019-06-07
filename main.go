@@ -58,8 +58,8 @@ Source code: https://github.com/shenwei356/breseq-rm-bg
 
 Example:
 
-    breseq-rm-bg -i -b bg/output/index.html -b bg2/output/index.html \
-      ample1/output/index.html > sample1/output/index.filtered.html
+    breseq-rm-bg -i -b bg1/output/index.html -b bg2/output/index.html \
+      sample1/output/index.html > sample1/output/index.filtered.html
 	  
 `,
 	Run: func(cmd *cobra.Command, args []string) {
