@@ -22,21 +22,37 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"runtime"
 	"strings"
 
+	colorable "github.com/mattn/go-colorable"
+	logging "github.com/shenwei356/go-logging"
 	"github.com/shenwei356/util/pathutil"
 )
 
-func checkError(err error) {
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(-1)
+var log = logging.MustGetLogger("shenwei356")
+
+var logFormat = logging.MustStringFormatter(
+	`%{time:15:04:05.000} %{color}[%{level:.4s}]%{color:reset} %{message}`,
+)
+
+func init() {
+	var stderr io.Writer = os.Stderr
+	if runtime.GOOS == "windows" {
+		stderr = colorable.NewColorableStderr()
 	}
+	backend := logging.NewLogBackend(stderr, "", 0)
+	backendFormatter := logging.NewBackendFormatter(backend, logFormat)
+	logging.SetBackend(backendFormatter)
 }
 
-func isStdin(file string) bool {
-	return file == "-"
+func checkError(err error) {
+	if err != nil {
+		log.Error(err)
+		os.Exit(-1)
+	}
 }
 
 func checkFiles(suffix string, files ...string) {

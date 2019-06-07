@@ -6,12 +6,12 @@ dir=binaries
 mkdir -p $dir;
 rm -rf $dir/$f;
 
-for f in breseq-rm-ctrl_*; do
+for f in breseq-rm-bg_*; do
     mkdir -p $dir/$f;
     mv $f $dir/$f;
     cd $dir/$f;
     mv $f $(echo $f | perl -pe 's/_[^\.]+//g');
-    tar -zcf $f.tar.gz breseq-rm-ctrl*;
+    tar -zcf $f.tar.gz breseq-rm-bg*;
     mv *.tar.gz ../;
     cd ..;
     rm -rf $f;
