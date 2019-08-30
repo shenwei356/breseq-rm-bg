@@ -1,5 +1,6 @@
+- [breseq-rm-bg v0.2.1](https://github.com/shenwei356/breseq-rm-bg/releases/tag/v0.2.1) [![Github Releases (by Release)](https://img.shields.io/github/downloads/shenwei356/breseq-rm-bg/v0.2.1/total.svg)](https://github.com/shenwei356/breseq-rm-bg/releases/tag/v0.2.1)
+    - fix bug for comparing missing of lots of genes
 - [breseq-rm-bg v0.2.0](https://github.com/shenwei356/breseq-rm-bg/releases/tag/v0.2.0) [![Github Releases (by Release)](https://img.shields.io/github/downloads/shenwei356/breseq-rm-bg/v0.2.0/total.svg)](https://github.com/shenwei356/breseq-rm-bg/releases/tag/v0.2.0)
     - supporting multiple background files
-
 - [breseq-rm-bg v0.1.0](https://github.com/shenwei356/breseq-rm-bg/releases/tag/v0.1.0) [![Github Releases (by Release)](https://img.shields.io/github/downloads/shenwei356/breseq-rm-bg/v0.1.0/total.svg)](https://github.com/shenwei356/breseq-rm-bg/releases/tag/v0.1.0)
     - first version

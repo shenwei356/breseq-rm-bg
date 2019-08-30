@@ -25,6 +25,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/shenwei356/util/cliutil"
@@ -50,7 +51,7 @@ var RootCmd = &cobra.Command{
 	Short: "remove backgroud mutations from breseq result",
 	Long: `breseq-rm-bg -- remove backgroud mutations from breseq result
 
-Version: v0.2.0
+Version: v0.2.1
 
 Author: Wei Shen <shenwei356@gmail.com>
 
@@ -113,7 +114,7 @@ Example:
 							buf2.WriteString(line2)
 						}
 					}
-					if _, ok = backgroud[buf2.String()]; !ok {
+					if _, ok = backgroud[rmExtraInfo(buf2.String())]; !ok {
 						fmt.Println(tagStart)
 						fmt.Println(record)
 						fmt.Println(tagEnd)
@@ -193,11 +194,25 @@ func readRecordsFromBreseqFile(file string) map[string]struct{} {
 		}
 
 		// fmt.Printf("--%s==\n", buf.String())
-		data[buf.String()] = struct{}{}
+		data[rmExtraInfo(buf.String())] = struct{}{}
 	}
 	checkError(scanner.Err())
 
 	return data
+}
+
+var reButton = regexp.MustCompile(`<div .+?>|</div>`)
+var reButton2 = regexp.MustCompile(`<input .+?>`)
+
+func rmExtraInfo(text string) string {
+	if reButton.MatchString(text) {
+		text = reButton.ReplaceAllString(text, "")
+	}
+
+	if reButton2.MatchString(text) {
+		text = reButton2.ReplaceAllString(text, "")
+	}
+	return text
 }
 
 var tagEnd = `<!-- End Table Row -->`
