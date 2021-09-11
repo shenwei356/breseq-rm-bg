@@ -18,7 +18,7 @@ you should re-seq your reference strain as a control/background, and use a close
 
 ## Compatibility
 
-breseq-rm-bg `v0.2.0` is tested for breseq version `0.33.2`, it should works for recent breseq versions.
+breseq-rm-bg `v0.2.1` is tested for breseq version `0.33.2`, it should works for recent breseq versions.
 
 ## License
 

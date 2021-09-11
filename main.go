@@ -28,6 +28,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/shenwei356/util/bytesize"
 	"github.com/shenwei356/util/cliutil"
 	"github.com/shenwei356/xopen"
 	"github.com/spf13/cobra"
@@ -37,6 +38,9 @@ func init() {
 	RootCmd.Flags().StringSliceP("bg-files", "b", []string{}, "background mutation file, i.e., index.html produced by breseq")
 	RootCmd.Flags().BoolP("bg-union", "u", false, "using union set of background mutations")
 	RootCmd.Flags().BoolP("bg-inter", "i", true, "using intersection set of background mutations")
+
+	RootCmd.Flags().StringP("buffer-size", "B", "1G", `size of buffer, supported unit: K, M, G. You need increase the value when "bufio.Scanner: token too long" error reported`)
+
 }
 
 func main() {
@@ -46,12 +50,14 @@ func main() {
 	}
 }
 
+var bufferSize int
+
 var RootCmd = &cobra.Command{
 	Use:   "breseq-rm-bg",
 	Short: "remove backgroud mutations from breseq result",
 	Long: `breseq-rm-bg -- remove backgroud mutations from breseq result
 
-Version: v0.2.1
+Version: v0.2.2
 
 Author: Wei Shen <shenwei356@gmail.com>
 
@@ -64,9 +70,21 @@ Example:
 	  
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		files := cliutil.GetFileList(args)
+		files := cliutil.GetFileList(args, true)
 		if len(files) > 1 {
 			checkError(fmt.Errorf("no more than one file should be given"))
+		}
+
+		bufferSizeS := cliutil.GetFlagString(cmd, "buffer-size")
+
+		if bufferSizeS == "" {
+			checkError(fmt.Errorf("value of buffer size. supported unit: K, M, G"))
+		}
+
+		var err error
+		bufferSize, err = bytesize.ParseByteSize(bufferSizeS)
+		if err != nil {
+			checkError(fmt.Errorf("invalid value of buffer size. supported unit: K, M, G"))
 		}
 
 		bgUnion := cliutil.GetFlagBool(cmd, "bg-union")
@@ -96,6 +114,7 @@ Example:
 		defer fh.Close()
 
 		scanner := bufio.NewScanner(fh)
+		scanner.Buffer(make([]byte, bufferSize), int(bufferSize))
 		scanner.Split(bufio.ScanLines)
 
 		var line, line2, record string
@@ -110,7 +129,7 @@ Example:
 
 					buf2.Reset()
 					for _, line2 = range strings.Split(record, "\n") {
-						if strings.Index(line2, "href") < 0 {
+						if !strings.Contains(line2, "href") {
 							buf2.WriteString(line2)
 						}
 					}
@@ -178,6 +197,7 @@ func readRecordsFromBreseqFile(file string) map[string]struct{} {
 	defer fh.Close()
 
 	scanner := bufio.NewScanner(fh)
+	scanner.Buffer(make([]byte, bufferSize), int(bufferSize))
 	scanner.Split(scanBreseqOutIndexHTML)
 
 	data := make(map[string]struct{}, 100)
